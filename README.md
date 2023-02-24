@@ -1,6 +1,8 @@
 # bettertimetable
 
 Better ICS generator for APSpace 
+![image](https://user-images.githubusercontent.com/43501106/221181409-ebcce320-d5be-4e72-952f-c92009c631ac.png)
+
 
 ### Packages needed
 * re
