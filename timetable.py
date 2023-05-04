@@ -43,58 +43,31 @@ for tfs in tf:
 
             redundancychk = tfb.contents[0]
 
-            pattern = re.compile(r"(^(CT|MPU|BM)\d{3})-\d-\d-(\w+?)-(\w+)-\d+(?: (\((?:Fully )?Online\)))?", re.MULTILINE | re.DOTALL)
+            pattern = re.compile(r"^((CT|MPU|BM)\d{3,4})-(3-2-)?(\w{3,5}(\(..\))?)-((LAB|L|T))(\s|-)(T-)?\d{1,2}( )?(\(Online\)|\(Hybrid\))?", re.MULTILINE)
             mat = pattern.search(tfb.contents[0])
 
-            # subjects
             if mat:
-                # subjects from SOC
-                if mat.group(2) == "CT":
-                    if mat.group(3) == "ISE":
-                        subject = "Imaging & Special Effects"
-                    elif mat.group(3) == "CSLLT":
-                        subject = "Computer System Low Level Techniques"
-                    else:
-                        break
+                # subject code (e.g TITAS(LS), BMK(FS), WPCS)
+                if mat.group(4) == "ISE":
+                    subject = "Imaging and Special Effects"
+                elif mat.group(4) == "TITAS(LS)":
+                    subject = "Islamic Civilization & Asian Civilization"                    else:
+                else:
+                    break
                     
-                    # class type (L/T/LAB)
-                    if mat.group(4) == "L":
-                        subject +=  " (Lecture)"
-                    elif mat.group(4) == "T":
-                        subject +=  " (Tutorial)"
-                    elif mat.group(4) == "LAB":
-                        subject +=  " (Lab)"
-                # subjects from SOB
-                elif mat.group(2) == "BM":
-                    if mat.group(3) == "CRI":
-                        subject = "Creativity & Innovation"
-                    else:
-                        break
 
-                    # section code (L/T/LAB)
-                    if mat.group(4) == "L":
-                        subject +=  " (Lecture)"
-                    elif mat.group(4) == "T":
-                        subject +=  " (Tutorial)"
-                    elif mat.group(4) == "LAB":
-                        subject +=  " (Lab)"
+                # section code (L/T/LAB)
+                if mat.group(4) == "L":
+                    subject +=  " (Lecture)"
+                elif mat.group(4) == "T":
+                    subject +=  " (Tutorial)"
+                elif mat.group(4) == "LAB":
+                    subject +=  " (Lab)"
                 
-                if mat.group(5) == "(Fully Online)":
+                if mat.group(5) == "(Online)":
                     loc = "Online"
-            else:
-                pattern = re.compile(r"((MPU)\d{4})-(\w+(\(\w+\))?)-(...)(\S|\s)(\((?:Fully )?Online\)?)?", re.MULTILINE | re.DOTALL)
-                mat = pattern.search(tfb.contents[0])
-                
-                # MPU subjects
-                if mat.group(2) == "MPU":
-
-                    if mat.group(3) == "TITAS(LS)":
-                        subject = "Islamic Civilization & Asian Civilization"
-                    else:
-                        break
-
-                    if mat.group(7) == "(Fully Online)":
-                        loc = "Online"
+                elif mat.group(5) == "(Hybrid)":
+                    loc = "Hybrid"
     
             e.name = subject
             e.begin = fromTime
